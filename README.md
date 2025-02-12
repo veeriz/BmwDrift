@@ -6,6 +6,8 @@ The CAN Bus Gateway is a Python-based application designed to interface with a C
 
 Poor mans PDM, using Blinkmarine 12key can keypad flashed to j1939. A RPI3b with can hat acts as Gateway. and forwards some key presses to Maxxecu and some to control analog pins connected to Solid state relays
 this is for prototyping, i will then refactor the code to run on a microcontroller.
+[a relative link](SimpleDiagram)
+
 ## Features
 
 - Listens for CAN messages indicating key press and release events.
