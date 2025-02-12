@@ -59,3 +59,5 @@ CAN_OBJECTS = [
     {'name': 'LCKey', 'state': 0, 'type': 'binary', 'key_number': 0x09, 'mode': 'latch', 'led_colors': {0: 0x00, 1: 0x07}},
     {'name': 'ALSKey', 'state': 0, 'type': 'binary', 'key_number': 0x0A, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x08}}
 ]
+
+
