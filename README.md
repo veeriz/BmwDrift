@@ -4,6 +4,8 @@
 
 The CAN Bus Gateway is a Python-based application designed to interface with a CAN bus, handling key press and release events from a keypad, controlling LEDs, and forwarding messages to an ECU. It is configured to work with a Raspberry Pi using the RPi.GPIO and python-can libraries.
 
+Poor mans PDM, using Blinkmarine 12key can keypad flashed to j1939. A RPI3b with can hat acts as Gateway. and forwards some key presses to Maxxecu and some to control analog pins connected to Solid state relays
+this is for prototyping, i will then refactor the code to run on a microcontroller.
 ## Features
 
 - Listens for CAN messages indicating key press and release events.
@@ -14,8 +16,13 @@ The CAN Bus Gateway is a Python-based application designed to interface with a C
 ## Requirements
 
 - Raspberry Pi with CAN interface
+- BlinkMarine keypad with J1939 flashed, baud rate changed to 500.
+- Maxxecu with Can bus activated and wired together
 - RPi.GPIO library
 - python-can library
+
+## Disclaimer
+Use at your own risk, this code has yet to be tested, and serves as a playground before designing a microcontroller board with appropriate safe guards.
 
 ## Configuration
 
