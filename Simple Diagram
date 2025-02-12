@@ -1,0 +1,19 @@
++-----------------+     CAN Bus      +-----------------+     CAN Bus      +-----------------+
+|   Raspberry Pi  |-------------------|    MaxxECU     |-------------------|     Keypad      |
++-----------------+                 +-----------------+                 +-----------------+
+|  GPIO Pins      |                 |  CAN Interface  |                 |  CAN Interface  |
+| (PWM to SSRs)   |                 |                 |                 |                 |
+|  CAN Interface  |                 |                 |                 |                 |
++-----------------+                 +-----------------+                 +-----------------+
+       ^                                     ^                                  ^
+       |                                     |                                  |
+       | Relay controls (Wires)         ECU functions,                          | Key Presses
+       |                                    ALS,                                |
++-----------------+                        Boost,                      +-----------------+
+|Solid state relays|                      Traction,                    |    Buttons      |
++-----------------+                    Launch control,                 +-----------------+
+                                       Engine Starter
+Cooling fan
+Fuel pumps
+Water pump
+Basic lights(maybe)
