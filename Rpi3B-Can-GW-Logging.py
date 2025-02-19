@@ -15,14 +15,14 @@ BITRATE = 500000  # Bitrate for the CAN bus communication
 
 # Define CAN bus message IDs for keys and their properties
 CAN_OBJECTS = [
-    {'name': 'fanKey', 'type': 'multi', 'levels': 5, 'key_number': 0x01, 'mode': 'latch', 'led_colors': {0: 0x07, 1: 0x03, 2: 0x02, 3: 0x04, 4: 0x01}, 'forward_address': 0x18FFA07A, 'pwm_pins': [18, 23]},  # white/off, blue, green, yellow, red
-    {'name': '1Key', 'type': 'binary', 'key_number': 0x02, 'mode': 'latch', 'led_colors': {0: 0x00, 1: 0x02}, 'pwm_pins': [24]},  # off, green
-    {'name': 'BoostKey', 'type': 'multi', 'levels': 2, 'key_number': 0x03, 'mode': 'latch', 'led_colors': {0: 0x00, 1: 0x03, 2: 0x06}, 'forward_address': 0x07C, 'forward_messages': {0: b'\x00\x00', 1: (250 * 10).to_bytes(2, byteorder='little')}},  # off, blue, magenta
-    {'name': 'TCKey', 'type': 'multi', 'levels': 4, 'key_number': 0x04, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x04, 2: 0x05, 3: 0x07, 4: 0x08}},  # off, yellow, cyan, white/light blue, amber/orange
-    {'name': 'StartKey', 'type': 'momentary', 'key_number': 0x07, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x05}, 'forward_address': 0x07B, 'forward_messages': {0: b'\x00', 1: b'\x01'}},  # off, cyan, forward to 0x7B
-    {'name': '2Key', 'type': 'binary', 'key_number': 0x08, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x06}, 'pwm_pins': [25]},  # off, magenta
-    {'name': 'LCKey', 'type': 'binary', 'key_number': 0x09, 'mode': 'latch', 'led_colors': {0: 0x00, 1: 0x07}},  # off, white/light blue
-    {'name': 'ALSKey', 'type': 'binary', 'key_number': 0x0A, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x08}}  # off, amber/orange
+    {'name': 'fanKey', 'type': 'multi', 'levels': 5, 'key_number': 0x06, 'mode': 'latch', 'led_colors': {0: 0x07, 1: 0x03, 2: 0x02, 3: 0x04, 4: 0x01}, 'forward_address': 0x18FFA07A, 'pwm_pins': [18, 23]},  # white/off, blue, green, yellow, red
+    {'name': '1Key', 'type': 'binary', 'key_number': 0x05, 'mode': 'latch', 'led_colors': {0: 0x00, 1: 0x02}, 'pwm_pins': [24]},  # off, green
+    {'name': 'BoostKey', 'type': 'multi', 'levels': 2, 'key_number': 0x04, 'mode': 'latch', 'led_colors': {0: 0x00, 1: 0x03, 2: 0x06}, 'forward_address': 0x07C, 'forward_messages': {0: b'\x00\x00', 1: (250 * 10).to_bytes(2, byteorder='little')}},  # off, blue, magenta
+    {'name': 'TCKey', 'type': 'multi', 'levels': 4, 'key_number': 0x03, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x04, 2: 0x05, 3: 0x07, 4: 0x08}},  # off, yellow, cyan, white/light blue, amber/orange
+    {'name': 'StartKey', 'type': 'momentary', 'key_number': 0x0C, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x05}, 'forward_address': 0x07B, 'forward_messages': {0: b'\x00', 1: b'\x01'}},  # off, cyan, forward to 0x7B
+    {'name': '2Key', 'type': 'binary', 'key_number': 0x0b, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x06}, 'pwm_pins': [25]},  # off, magenta
+    {'name': 'LCKey', 'type': 'binary', 'key_number': 0x0a, 'mode': 'latch', 'led_colors': {0: 0x00, 1: 0x07}},  # off, white/light blue
+    {'name': 'ALSKey', 'type': 'binary', 'key_number': 0x09, 'mode': 'momentary', 'led_colors': {0: 0x00, 1: 0x08}}  # off, amber/orange
 ]
 
 # GPIO setup for PWM
@@ -102,10 +102,14 @@ class CANBusGateway:
                 if obj['type'] == 'binary':
                     state = 1 if data == 0x01 else 0
                 elif obj['type'] == 'multi':
-                    if data == 0x01 and state < obj['levels']:
-                        state += 1
-                    elif data == 0x00:
-                        state = 0
+                    if obj['mode'] == 'latch':
+                        if data == 0x01:
+                            state = (state + 1) % (obj['levels'] + 1)
+                    else:
+                        if data == 0x01 and state < obj['levels']:
+                            state += 1
+                        elif data == 0x00:
+                            state = 0
                 self.states[key_number] = state
                 return DUTY_CYCLE_MAP[state]
 
